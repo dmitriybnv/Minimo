@@ -32,6 +32,8 @@ generateButton.onclick = function() {
 		compiler.superAnalyzers = [
 			VariableDefinitionSuperAnalyzer,
 			FunctionCallSuperAnalyzer,
+			LabelSuperAnalyzer,
+			GotoSuperAnalyzer,
 			FunctionDefinitionSuperAnalyzer,
 			IfDefinitionSuperAnalyzer,
 		];

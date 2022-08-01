@@ -192,6 +192,22 @@ class ConditionOperatorAnalyzer extends Analyzer {
 	validationName = 'condition operator';
 }
 
-// class LabelAnalyzer extends Analyzer {
-// 	regexp = /^\s*#()#\s*/i;
-// }
+const LabelPattern = IdentifierPattern;
+
+class LabelAnalyzer extends Analyzer {
+	regexp = new RegExp(String.raw`^\s*#(${LabelPattern})#\s*`, 'i');
+
+	validationName = 'label';
+}
+
+class GotoAnalyzer extends Analyzer {
+	regexp = new RegExp(String.raw`^\s*goto (${LabelPattern})*\$\s*`, 'i');
+
+	validationName = 'goto';
+
+	validate() {
+		if (this.result[1] === undefined) {
+			throw 'goto label missing';
+		}
+	}
+}

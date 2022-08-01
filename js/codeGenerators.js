@@ -244,3 +244,33 @@ class IfDefinitionCodeGenerator extends CodeGenerator {
 		return this.code;
 	}
 }
+
+class LabelCodeGenerator extends CodeGenerator {
+	generateCode() {
+		var compiler = this.superAnalyzer.compiler;
+
+		var labelName = this.superAnalyzer.labelName;
+
+		if (compiler.checkIfLabelExists(labelName) === true) {
+			throw `label "${labelName}" already in use`;
+		}
+
+		compiler.reservedLabels.push(labelName);
+
+		return `#${labelName}#\n\n`;
+	}
+}
+
+class GotoCodeGenerator extends CodeGenerator {
+	generateCode() {
+		var compiler = this.superAnalyzer.compiler;
+
+		var labelName = this.superAnalyzer.labelName;
+
+		// if (compiler.checkIfLabelExists(labelName) === false) {
+		// 	throw `label "${labelName}" not in use`;
+		// }
+
+		return `JMP ${labelName}$\n\n`;
+	}
+}

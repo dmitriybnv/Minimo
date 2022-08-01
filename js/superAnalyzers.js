@@ -334,3 +334,39 @@ class IfDefinitionSuperAnalyzer extends SuperAnalyzer {
 		return true;
 	}
 }
+
+class LabelSuperAnalyzer extends SuperAnalyzer {
+	labelName = '';
+
+	codeGenerator = LabelCodeGenerator;
+
+	check() {
+		var label = Object.seal(new LabelAnalyzer(this.code, this)).check();
+
+		if (label === null) {
+			return false;
+		}
+
+		this.labelName = label[1];
+
+		return true;
+	}
+}
+
+class GotoSuperAnalyzer extends SuperAnalyzer {
+	labelName = '';
+
+	codeGenerator = GotoCodeGenerator;
+
+	check() {
+		var goto = Object.seal(new GotoAnalyzer(this.code, this)).check();
+
+		if (goto === null) {
+			return false;
+		}
+
+		this.labelName = goto[1];
+
+		return true;
+	}
+}
