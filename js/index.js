@@ -1,16 +1,18 @@
 'use strict'
 
-var compilingError = false;
+let compilingError = false;
 
-var displayAssemblyCode = false;
+let displayAssemblyCode = false;
 
-var compiler = null;
+let compiler = null;
 
-var generateButton = document.querySelector('#generateButton');
+let generateButton = document.querySelector('#generateButton');
 
-var textareaLeft = document.querySelector('textarea.left');
+let assemblyButton = document.querySelector('#assemblyButton');
 
-var textareaRight = document.querySelector('textarea.right');
+let textareaLeft = document.querySelector('textarea.left');
+
+let textareaRight = document.querySelector('textarea.right');
 
 generateButton.onclick = function() {
 	try {
@@ -74,11 +76,9 @@ assemblyButton.onclick = function() {
 
 	if (displayAssemblyCode === false) {
 		try {
-			var assembler = Object.seal(new Assembler(compiler.assemblyCode, 16));
+			let assembler = Object.seal(new Assembler(compiler.assemblyCode, 16));
 
-			var bytes = assembler.beautifyBytes(assembler.bytes);
-
-			textareaRight.value = bytes;
+			textareaRight.value = assembler.beautifyBytes(assembler.bytes);
 		} catch (error) {
 			textareaRight.value = error;
 		}

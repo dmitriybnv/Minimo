@@ -37,14 +37,17 @@ class VariableDefinitionSuperAnalyzer extends SuperAnalyzer {
 
 		this.name = this.name[1];
 
-		var expectedAnalyzers = [NumberAnalyzer, PlusAnalyzer, MinusAnalyzer, IdentifierAnalyzer];
+		let expectedAnalyzers = [NumberAnalyzer, PlusAnalyzer, MinusAnalyzer, IdentifierAnalyzer];
 
-		var lastToken = false;
+		/**
+		 * @type {boolean|*}
+		 */
+		let lastToken = false;
 
 		// a = 5
 		loop: do {
-			for (var analyzer of this.compiler.analyzers) {
-				var analyzerObject = Object.seal(new analyzer(this.code, this));
+			for (let analyzer of this.compiler.analyzers) {
+				let analyzerObject = Object.seal(new analyzer(this.code, this));
 
 				if (analyzerObject.check(true) !== null) {
 					// console.log(analyzerObject);
@@ -125,11 +128,11 @@ class FunctionDefinitionSuperAnalyzer extends SuperAnalyzer {
 	codeGenerator = FunctionDefinitionCodeGenerator;
 
 	check() {
-		var allFuncStart = Object.seal(new FunctionStartAnalyzer(this.code, this)).check();
+		let allFuncStart = Object.seal(new FunctionStartAnalyzer(this.code, this)).check();
 
-		var allFuncEnd = Object.seal(new FunctionEndAnalyzer(this.code, this)).check();
+		let allFuncEnd = Object.seal(new FunctionEndAnalyzer(this.code, this)).check();
 
-		var sum = 0;
+		let sum = 0;
 
 		if (allFuncStart !== null) {
 			sum += allFuncStart.length;
@@ -149,20 +152,20 @@ class FunctionDefinitionSuperAnalyzer extends SuperAnalyzer {
 
 		this.name = allFuncStart[0][1];
 
-		var bodyStart = allFuncStart[0][0].length;
+		let bodyStart = allFuncStart[0][0].length;
 
-		for (var currentFuncEnd of allFuncEnd) {
-			var funcStartNumber = 0;
+		for (let currentFuncEnd of allFuncEnd) {
+			let funcStartNumber = 0;
 
-			var funcEndNumber = 0;
+			let funcEndNumber = 0;
 
-			for (var funcStart of allFuncStart) {
+			for (let funcStart of allFuncStart) {
 				if (funcStart.index < currentFuncEnd.index) {
 					funcStartNumber++;
 				}
 			}
 
-			for (var funcEnd of allFuncEnd) {
+			for (let funcEnd of allFuncEnd) {
 				if (funcEnd.index <= currentFuncEnd.index) {
 					funcEndNumber++;
 				}
@@ -195,13 +198,13 @@ class FunctionCallSuperAnalyzer extends SuperAnalyzer {
 	codeGenerator = FunctionCallCodeGenerator;
 
 	check() {
-		var call = Object.seal(new FunctionCallAnalyzer(this.code, this)).check();
+		let call = Object.seal(new FunctionCallAnalyzer(this.code, this)).check();
 
 		if (call === null) {
 			return false;
 		}
 
-		var name = call[1];
+		let name = call[1];
 
 		if (this.compiler.functionExists(name) === false) {
 			throw `function "${name}" not found`;
@@ -229,7 +232,7 @@ class IfDefinitionSuperAnalyzer extends SuperAnalyzer {
 	codeGenerator = IfDefinitionCodeGenerator;
 
 	checkOperand() {
-		var operand = Object.seal(new IdentifierAnalyzer(this.condition, this));
+		let operand = Object.seal(new IdentifierAnalyzer(this.condition, this));
 
 		if (operand.check(true) !== null) {
 			this.condition = operand.cleanCode(true);
@@ -259,11 +262,11 @@ class IfDefinitionSuperAnalyzer extends SuperAnalyzer {
 	}
 
 	check() {
-		var allIfStart = Object.seal(new IfStartAnalyzer(this.code, this)).check();
+		let allIfStart = Object.seal(new IfStartAnalyzer(this.code, this)).check();
 
-		var allIfEnd = Object.seal(new IfEndAnalyzer(this.code, this)).check();
+		let allIfEnd = Object.seal(new IfEndAnalyzer(this.code, this)).check();
 
-		var sum = 0;
+		let sum = 0;
 
 		if (allIfStart !== null) {
 			sum += allIfStart.length;
@@ -303,21 +306,21 @@ class IfDefinitionSuperAnalyzer extends SuperAnalyzer {
 
 		// console.log(this.firstOperand, this.operator, this.secondOperand);
 
-		var bodyStart = allIfStart[0][0].length;
+		let bodyStart = allIfStart[0][0].length;
 
-		for (var currentIfEnd of allIfEnd) {
-			var ifStartNumber = 0;
+		for (let currentIfEnd of allIfEnd) {
+			let ifStartNumber = 0;
 
-			var ifEndNumber = 0;
+			let ifEndNumber = 0;
 
-			for (var funcStart of allIfStart) {
-				if (funcStart.index < currentIfEnd.index) {
+			for (let ifStart of allIfStart) {
+				if (ifStart.index < currentIfEnd.index) {
 					ifStartNumber++;
 				}
 			}
 
-			for (var funcEnd of allIfEnd) {
-				if (funcEnd.index <= currentIfEnd.index) {
+			for (let ifEnd of allIfEnd) {
+				if (ifEnd.index <= currentIfEnd.index) {
 					ifEndNumber++;
 				}
 			}
@@ -341,7 +344,7 @@ class LabelSuperAnalyzer extends SuperAnalyzer {
 	codeGenerator = LabelCodeGenerator;
 
 	check() {
-		var label = Object.seal(new LabelAnalyzer(this.code, this)).check();
+		let label = Object.seal(new LabelAnalyzer(this.code, this)).check();
 
 		if (label === null) {
 			return false;
@@ -359,7 +362,7 @@ class GotoSuperAnalyzer extends SuperAnalyzer {
 	codeGenerator = GotoCodeGenerator;
 
 	check() {
-		var goto = Object.seal(new GotoAnalyzer(this.code, this)).check();
+		let goto = Object.seal(new GotoAnalyzer(this.code, this)).check();
 
 		if (goto === null) {
 			return false;

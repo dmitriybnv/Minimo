@@ -10,22 +10,22 @@ class CodeGenerator {
 
 class VariableDefinitionCodeGenerator extends CodeGenerator {
 	generateCode() {
-		var compiler = this.superAnalyzer.compiler;
+		let compiler = this.superAnalyzer.compiler;
 
-		var analyzers = this.superAnalyzer.value;
+		let analyzers = this.superAnalyzer.value;
 
-		var pendingOperation = null;
+		let pendingOperation = null;
 
-		var assemblyCode = 'LD ACC 00; cleaning' + '\n\n';
+		let assemblyCode = 'LD ACC 00; cleaning' + '\n\n';
 
-		for (var i = 0; i < analyzers.length; i++) {
-			var analyzer = analyzers[i];
+		for (let i = 0; i < analyzers.length; i++) {
+			let analyzer = analyzers[i];
 
 			if (analyzer.constructor === NumberAnalyzer) {
-				var accumulator = parseInt(analyzer.result[1]);
+				let accumulator = parseInt(analyzer.result[1]);
 
 				if (analyzers[i + 1] !== undefined) {
-					for (var k = i + 1; k < analyzers.length;) {
+					for (let k = i + 1; k < analyzers.length;) {
 						if (analyzers[k].constructor === PlusAnalyzer) {
 							if (analyzers[k + 1].constructor === NumberAnalyzer) {
 								accumulator += analyzers[k + 1].result[1];
@@ -54,7 +54,7 @@ class VariableDefinitionCodeGenerator extends CodeGenerator {
 					}
 				}
 
-				var operation = 'ADD';
+				let operation = 'ADD';
 
 				if (pendingOperation === MinusAnalyzer) {
 					operation = 'SUB';
@@ -79,13 +79,13 @@ class VariableDefinitionCodeGenerator extends CodeGenerator {
 			}
 
 			if (analyzer.constructor === IdentifierAnalyzer) {
-				var [variableExists, variableId] = compiler.checkVariable(analyzer.result[1]);
+				let [variableExists, variableId] = compiler.checkVariable(analyzer.result[1]);
 
 				if (variableExists === false) {
 					throw 'variable ' + analyzer.result[1] + ' not found';
 				}
 
-				var address = this.superAnalyzer.compiler.decimalToHex(variableId);
+				let address = this.superAnalyzer.compiler.decimalToHex(variableId);
 
 				if (pendingOperation === null) {
 					pendingOperation = PlusAnalyzer;
@@ -106,9 +106,15 @@ class VariableDefinitionCodeGenerator extends CodeGenerator {
 			break;
 		}
 
-		var [variableExists, variableId] = compiler.checkVariable(this.superAnalyzer.name);
+		/**
+		 * @type {number|null}
+		 */
+		let variableId = compiler.checkVariable(this.superAnalyzer.name)[1];
 
-		var address = '';
+		/**
+		 * @type {string}
+		 */
+		let address;
 
 		if (variableId === null) {
 			compiler.variables.push(new CompilerVariable(
@@ -131,13 +137,13 @@ class VariableDefinitionCodeGenerator extends CodeGenerator {
 
 class FunctionDefinitionCodeGenerator extends CodeGenerator {
 	generateCode(originalFlag) {
-		var compiler = this.superAnalyzer.compiler;
+		let compiler = this.superAnalyzer.compiler;
 
-		var content = this.superAnalyzer.content;
+		let content = this.superAnalyzer.content;
 
-		var compiledContent = compiler.compile(content, true);
+		let compiledContent = compiler.compile(content, true);
 
-		var code = `#${this.superAnalyzer.name}#` + '\n\n'
+		let code = `#${this.superAnalyzer.name}#` + '\n\n'
 			+ compiledContent
 			+ 'RET' + '\n\n';
 
@@ -153,11 +159,14 @@ class FunctionDefinitionCodeGenerator extends CodeGenerator {
 
 class FunctionCallCodeGenerator extends CodeGenerator {
 	generateCode() {
-		var _function = this.superAnalyzer.function;
+		let _function = this.superAnalyzer.function;
 
-		var name = _function.name;
+		let name = _function.name;
 
-		var code = '';
+		/**
+		 * @type {string}
+		 */
+		let code;
 
 		if (_function.systemFunction === true) {
 			code = _function.execute(this.superAnalyzer.compiler, this.superAnalyzer.arguments);
@@ -173,10 +182,10 @@ class IfDefinitionCodeGenerator extends CodeGenerator {
 	code = '';
 
 	generateOperandCode(operand, number) {
-		var compiler = this.superAnalyzer.compiler;
+		let compiler = this.superAnalyzer.compiler;
 
 		if (operand.constructor === NumberAnalyzer) {
-			var accumulator = 'R0';
+			let accumulator = 'R0';
 
 			if (number < 1) {
 				accumulator = 'ACC';
@@ -185,13 +194,13 @@ class IfDefinitionCodeGenerator extends CodeGenerator {
 			this.code += `LD ${accumulator} ${compiler.decimalToHex(parseInt(operand.result[1]))}` + '\n';
 		} else {
 			if (operand.constructor === IdentifierAnalyzer) {
-				var accumulator = 'R0';
+				let accumulator = 'R0';
 
 				if (number < 1) {
 					accumulator = 'ACC';
 				}
 
-				var [variableExists, variableId] = compiler.checkVariable(operand.result[1]);
+				let [variableExists, variableId] = compiler.checkVariable(operand.result[1]);
 
 				if (variableExists === false) {
 					throw 'variable ' + operand.result[1] + ' not found';
@@ -205,13 +214,13 @@ class IfDefinitionCodeGenerator extends CodeGenerator {
 	}
 
 	generateCode() {
-		var compiler = this.superAnalyzer.compiler;
+		let compiler = this.superAnalyzer.compiler;
 
-		var content = this.superAnalyzer.content;
+		let content = this.superAnalyzer.content;
 
-		var compiledContent = compiler.compile(content, true);
+		let compiledContent = compiler.compile(content, true);
 
-		var jumpType = '';
+		let jumpType = '';
 
 		switch (this.superAnalyzer.operator) {
 			case '>':
@@ -228,7 +237,7 @@ class IfDefinitionCodeGenerator extends CodeGenerator {
 				break;
 		}
 
-		var label = compiler.getRandomLabel();
+		let label = compiler.getRandomLabel();
 
 		this.generateOperandCode(this.superAnalyzer.firstOperand, 0);
 
@@ -247,9 +256,9 @@ class IfDefinitionCodeGenerator extends CodeGenerator {
 
 class LabelCodeGenerator extends CodeGenerator {
 	generateCode() {
-		var compiler = this.superAnalyzer.compiler;
+		let compiler = this.superAnalyzer.compiler;
 
-		var labelName = this.superAnalyzer.labelName;
+		let labelName = this.superAnalyzer.labelName;
 
 		if (compiler.checkIfLabelExists(labelName) === true) {
 			throw `label "${labelName}" already in use`;
@@ -263,9 +272,7 @@ class LabelCodeGenerator extends CodeGenerator {
 
 class GotoCodeGenerator extends CodeGenerator {
 	generateCode() {
-		var compiler = this.superAnalyzer.compiler;
-
-		var labelName = this.superAnalyzer.labelName;
+		let labelName = this.superAnalyzer.labelName;
 
 		// if (compiler.checkIfLabelExists(labelName) === false) {
 		// 	throw `label "${labelName}" not in use`;

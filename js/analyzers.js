@@ -1,7 +1,7 @@
 class Analyzer {
 	code = '';
 
-	regexp = '';
+	regexp = new RegExp('');
 
 	result = null;
 
@@ -9,8 +9,7 @@ class Analyzer {
 
 	superAnalyzer = null;
 
-	// TODO: deprecated?
-	resultHandler() {}
+	global = false;
 
 	validate() {}
 
@@ -18,8 +17,8 @@ class Analyzer {
 		if (this.result === null) {
 			return;
 		}
-		
-		var updatedCode = this.code.substr(this.result[0].length);
+
+		let updatedCode = this.code.substr(this.result[0].length);
 
 		if (returnCode === true) {
 			return updatedCode;
@@ -107,7 +106,7 @@ class PlusAnalyzer extends Analyzer {
 }
 
 class MinusAnalyzer extends Analyzer {
-	regexp = /^\s*\-\s*/;
+	regexp = /^\s*-\s*/;
 
 	validationName = 'minus';
 }
@@ -187,7 +186,7 @@ class IfEndAnalyzer extends Analyzer {
 }
 
 class ConditionOperatorAnalyzer extends Analyzer {
-	regexp = /^\s*(\=\=|<|>)\s*/;
+	regexp = /^\s*(==|<|>)\s*/;
 
 	validationName = 'condition operator';
 }

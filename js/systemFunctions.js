@@ -6,7 +6,7 @@ class RAMSelect extends CompilerFunction {
 	argumentNumber = 1;
 
 	handler(compiler, _arguments) {
-		var assemblyCode = '';
+		let assemblyCode = '';
 
 		assemblyCode += `LD R0 ${compiler.decimalToHex(_arguments[0])}` + '\n'
 					+ 'MAR R0' + '\n'
@@ -26,7 +26,7 @@ class RAMWrite extends CompilerFunction {
 	argumentNumber = 1;
 
 	handler(compiler, _arguments) {
-		var assemblyCode = '';
+		let assemblyCode = '';
 
 		assemblyCode += `LD R0 ${compiler.decimalToHex(_arguments[0])}` + '\n'
 					+ 'MAR R0' + '\n'
@@ -46,7 +46,7 @@ class RAMRead extends CompilerFunction {
 	argumentNumber = 1;
 
 	handler(compiler, _arguments) {
-		var assemblyCode = '';
+		let assemblyCode = '';
 
 		assemblyCode += 'MR R1' + '\n'
 					+ `LD R0 ${compiler.decimalToHex(_arguments[0])}` + '\n'
@@ -69,7 +69,7 @@ class GPUSelect extends CompilerFunction {
 	argumentNumber = 1;
 
 	handler(compiler, _arguments) {
-		var assemblyCode = '';
+		let assemblyCode = '';
 
 		assemblyCode += `LD R0 ${compiler.decimalToHex(_arguments[0])}` + '\n'
 					+ 'MAR R0' + '\n'
@@ -88,7 +88,7 @@ class GPUAdd extends CompilerFunction {
 	argumentNumber = 1;
 
 	handler(compiler, _arguments) {
-		var assemblyCode = '';
+		let assemblyCode = '';
 
 		assemblyCode += `LD R0 ${compiler.decimalToHex(_arguments[0])}` + '\n'
 					+ 'MAR R0' + '\n'
@@ -107,7 +107,7 @@ class GPUSubtract extends CompilerFunction {
 	argumentNumber = 1;
 
 	handler(compiler, _arguments) {
-		var assemblyCode = '';
+		let assemblyCode = '';
 
 		assemblyCode += `LD R0 ${compiler.decimalToHex(_arguments[0])}` + '\n'
 					+ 'MAR R0' + '\n'
@@ -126,7 +126,7 @@ class keyboardRead extends CompilerFunction {
 	argumentNumber = 1;
 
 	handler(compiler, _arguments) {
-		var assemblyCode = '';
+		let assemblyCode = '';
 
 		assemblyCode += `LD R0 ${compiler.decimalToHex(_arguments[0])}` + '\n'
 					+ 'MAR R0' + '\n'
@@ -145,14 +145,12 @@ class keyboardClear extends CompilerFunction {
 	argumentNumber = 0;
 
 	handler(compiler) {
-		var assemblyCode = 'KCL' + '\n\n';
-
 		// assemblyCode += `LD R0 ${compiler.decimalToHex(_arguments[0])}` + '\n'
 		// 			+ 'MAR R0' + '\n'
 		// 			+ 'KEY R0' + '\n'
 		// 			+ 'MW R0' + '\n\n';
 
-		return assemblyCode;
+		return 'KCL' + '\n\n';
 	}
 }
 
@@ -164,7 +162,7 @@ class shiftLeft extends CompilerFunction {
 	argumentNumber = 1;
 
 	handler(compiler, _arguments) {
-		var assemblyCode = '';
+		let assemblyCode = '';
 
 		assemblyCode += `LD R0 ${compiler.decimalToHex(_arguments[0])}` + '\n'
 					+ 'MAR R0' + '\n'
@@ -184,7 +182,7 @@ class shiftRight extends CompilerFunction {
 	argumentNumber = 1;
 
 	handler(compiler, _arguments) {
-		var assemblyCode = '';
+		let assemblyCode = '';
 
 		assemblyCode += `LD R0 ${compiler.decimalToHex(_arguments[0])}` + '\n'
 					+ 'MAR R0' + '\n'

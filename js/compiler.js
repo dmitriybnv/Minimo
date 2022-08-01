@@ -20,18 +20,18 @@ class CompilerFunction {
 	handler(compiler, _arguments) {}
 
 	execute(compiler, argumentString) {
-		var _arguments = [];
+		let _arguments = [];
 
 		while (_arguments.length < this.argumentNumber) {
-			var identifier = new IdentifierAnalyzer(argumentString);
+			let identifier = new IdentifierAnalyzer(argumentString);
 
-			var result = identifier.check();
+			let result = identifier.check();
 
 			if (result === null) {
 				throw `no argument found for "${this.name}" function`;
 			}
 
-			var [variableExists, variableId] = compiler.checkVariable(identifier.result[1]);
+			let [variableExists, variableId] = compiler.checkVariable(identifier.result[1]);
 
 			if (variableExists === false) {
 				throw `variable "${identifier.result[1]}" not defined`;
@@ -59,8 +59,6 @@ class CompilerFunction {
 }
 
 class Compiler {
-	inputCode = '';
-
 	assemblyCode = '';
 
 	functionAssemblyCode = '';
@@ -80,7 +78,7 @@ class Compiler {
 	superAnalyzers = [];
 
 	checkIfLabelExists(name) {
-		for (var label of this.reservedLabels) {
+		for (let label of this.reservedLabels) {
 			if (name === label) {
 				return true;
 			}
@@ -90,10 +88,10 @@ class Compiler {
 	}
 
 	getRandomLabel() {
-		var randomString = (this.counter + 1).toString();
+		let randomString = (this.counter + 1).toString();
 
 		if (this.checkIfLabelExists(randomString) === true) {
-			return getRandomLabel();
+			return this.getRandomLabel();
 		}
 
 		this.counter++;
@@ -103,8 +101,12 @@ class Compiler {
 		return randomString;
 	}
 
+	/**
+	 * @param {number} decimal
+	 * @returns {string}
+	 */
 	decimalToHex(decimal) {
-		return decimal.toString(16).padStart(2, 0).toUpperCase();
+		return decimal.toString(16).padStart(2, '0').toUpperCase();
 	}
 
 	addFunction(_function) {
@@ -116,8 +118,8 @@ class Compiler {
 	}
 
 	checkVariable(name) {
-		for (var i = 0; i < this.variables.length; i++) {
-			var variable = this.variables[i];
+		for (let i = 0; i < this.variables.length; i++) {
+			let variable = this.variables[i];
 
 			if (variable.name === name) {
 				return [true, i];
@@ -140,7 +142,7 @@ class Compiler {
 			console.log('%c not matching', 'color: lightcoral');
 		}
 
-		console.groupEnd(superAnalyzer.name);
+		console.groupEnd();
 	}
 
 	finalTouch() {
@@ -156,20 +158,22 @@ class Compiler {
 			throw 'code is empty';
 		}
 
-		var assemblyCode = '';
+		let assemblyCode = '';
 
 		do {
-			var superAnalyzerFound = false;
+			let superAnalyzerFound = false;
 
-			for (var superAnalyzer of this.superAnalyzers) {
-				var superAnalyzerObject = Object.seal(new superAnalyzer(inputCode, this));
+			for (let superAnalyzer of this.superAnalyzers) {
+				let superAnalyzerObject = Object.seal(new superAnalyzer(inputCode, this));
 
 				this.logBefore(superAnalyzer);
 
 				console.log(JSON.stringify(inputCode));
 
+				let result = false;
+
 				try {
-					var result = superAnalyzerObject.check();
+					result = superAnalyzerObject.check();
 				} finally {
 					this.logAfter(superAnalyzer, result);
 				}
@@ -179,10 +183,10 @@ class Compiler {
 				}
 
 				superAnalyzerFound = true;
-				
-				var codeGenerator = Object.seal(new superAnalyzerObject.codeGenerator(superAnalyzerObject));
 
-				var generatedCode = codeGenerator.generateCode(!returnFlag);
+				let codeGenerator = Object.seal(new superAnalyzerObject.codeGenerator(superAnalyzerObject));
+
+				let generatedCode = codeGenerator.generateCode(!returnFlag);
 
 				if (generatedCode !== false) {
 					assemblyCode += generatedCode;

@@ -1,6 +1,9 @@
 function OpcodeType(code, operands) {
 	this.code = code;
 
+	/**
+	 * @type [OperandType]
+	 */
 	this.operands = operands;
 }
 
@@ -27,10 +30,16 @@ function Assembler(string, instructionLength) {
 
 	this.instructionLength = instructionLength;
 
+	/**
+	 * @type {string[]}
+	 */
 	this.bytes = [];
 
 	this.labels = {};
 
+	/**
+	 * @type {LabelRequest[]}
+	 */
 	this.labelRequests = [];
 
 	this.assemble();
@@ -41,7 +50,7 @@ Assembler.prototype.opcodeTypes = {};
 Assembler.prototype.operandTypes = {};
 
 Assembler.prototype.beautifyBytes = function() {
-	var temp = [];
+	let temp = [];
 
 	this.bytes.forEach(v => {temp.push(parseInt(v, 2).toString(16).padStart(4, '0'))});
 
@@ -66,9 +75,9 @@ Assembler.prototype.assemble = function() {
 	this.cleanCode();
 
 	do {
-		var opcodeFound = false;
+		let opcodeFound = false;
 
-		var result = this.string.match(/^#([_a-z0-9]+)#/i);
+		let result = this.string.match(/^#([_a-z0-9]+)#/i);
 
 		if (result !== null) {
 			console.log('label: ' + result[1]);
@@ -80,11 +89,11 @@ Assembler.prototype.assemble = function() {
 			continue;
 		}
 
-		for (var opcode in this.opcodeTypes) {
+		for (let opcode in this.opcodeTypes) {
 			// result = this.string.search(new RegExp('^' + opcode));
 			result = this.string.search(new RegExp(String.raw`^${opcode}`, 'i'));
 
-			var code = '';
+			let code = '';
 
 			if (result !== -1) {
 				console.log('opcode: ' + opcode);
@@ -95,12 +104,10 @@ Assembler.prototype.assemble = function() {
 
 				opcodeFound = true;
 
-				var operands = this.opcodeTypes[opcode].operands;
+				let operands = this.opcodeTypes[opcode].operands;
 
-				for (var operand in operands) {
-					operand = operands[operand];
-
-					var type = this.operandTypes[operand];
+				for (let operand of operands) {
+					let type = this.operandTypes[operand];
 
 					result = this.string.match(type.pattern);
 
@@ -127,20 +134,23 @@ Assembler.prototype.assemble = function() {
 			}
 		}
 
-		if (!opcodeFound) {
+		if (opcodeFound === false) {
 			this.showInfo();
 
 			throw 'no opcode found';
 		}
 	} while (this.string.length > 0);
 
-	for (var request in this.labelRequests) {
+	for (let request in this.labelRequests) {
 		request = this.labelRequests[request];
 
 		if (this.labels[request.name] !== undefined) {
-			var position = this.labels[request.name].pointsTo;
+			/**
+			 * @type {number}
+			 */
+			let position = this.labels[request.name].pointsTo;
 
-			var labelLink = position.toString(2);
+			let labelLink = position.toString(2);
 
 			this.bytes[request.requestedAt] += labelLink.padStart(11, '0');
 
@@ -150,7 +160,7 @@ Assembler.prototype.assemble = function() {
 		}
 	}
 
-	for (var byte in this.bytes) {
+	for (let byte in this.bytes) {
 		this.bytes[byte] = this.bytes[byte].padEnd(this.instructionLength, '0');
 	}
 };
