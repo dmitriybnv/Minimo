@@ -176,7 +176,7 @@ class FunctionDefinitionSuperAnalyzer extends SuperAnalyzer {
 			return false;
 		}
 
-		if (allFuncStart.length !== allFuncEnd.length) {
+		if (sum % 2 !== 0) {
 			throw 'function start and end number mismatch';
 		}
 
@@ -284,7 +284,7 @@ class IfDefinitionSuperAnalyzer extends SuperAnalyzer {
 			return false;
 		}
 
-		if (allIfStart.length !== allIfEnd.length) {
+		if (sum % 2 !== 0) {
 			throw 'if statement start and end number mismatch';
 		}
 
