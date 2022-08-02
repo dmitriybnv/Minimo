@@ -1,3 +1,5 @@
+/* This is still legacy code territory */
+
 function OpcodeType(code, operands) {
 	this.code = code;
 
@@ -25,10 +27,10 @@ function LabelRequest(name, requestedAt) {
 	this.requestedAt = requestedAt;
 }
 
-function Assembler(string, instructionLength) {
-	this.string = string;
+function BaseAssembler() {
+	this.string = '';
 
-	this.instructionLength = instructionLength;
+	this.instructionLength = 0;
 
 	/**
 	 * @type {string[]}
@@ -42,14 +44,15 @@ function Assembler(string, instructionLength) {
 	 */
 	this.labelRequests = [];
 
-	this.assemble();
+	/**
+	 * @type {{OpcodeType}}
+	 */
+	this.opcodeTypes = {};
+
+	this.operandTypes = {};
 }
 
-Assembler.prototype.opcodeTypes = {};
-
-Assembler.prototype.operandTypes = {};
-
-Assembler.prototype.beautifyBytes = function() {
+BaseAssembler.prototype.beautifyBytes = function() {
 	let temp = [];
 
 	this.bytes.forEach(v => {temp.push(parseInt(v, 2).toString(16).padStart(4, '0'))});
@@ -57,7 +60,7 @@ Assembler.prototype.beautifyBytes = function() {
 	return temp.join(' ');
 }
 
-Assembler.prototype.showInfo = function() {
+BaseAssembler.prototype.showInfo = function() {
 	if (this.string !== '') {
 		console.log(this.string);
 	}
@@ -65,13 +68,13 @@ Assembler.prototype.showInfo = function() {
 	console.log(this.beautifyBytes(this.bytes));
 }
 
-Assembler.prototype.cleanCode = function() {
+BaseAssembler.prototype.cleanCode = function() {
 	this.string = this.string.replace(/;.*/g, '') // removing comments
 	
 	.replace(/\s/g, ''); // removing whitespaces
 };
 
-Assembler.prototype.assemble = function() {
+BaseAssembler.prototype.assemble = function() {
 	this.cleanCode();
 
 	do {
@@ -90,7 +93,6 @@ Assembler.prototype.assemble = function() {
 		}
 
 		for (let opcode in this.opcodeTypes) {
-			// result = this.string.search(new RegExp('^' + opcode));
 			result = this.string.search(new RegExp(String.raw`^${opcode}`, 'i'));
 
 			let code = '';
