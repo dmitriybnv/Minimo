@@ -18,41 +18,6 @@ generateButton.onclick = function() {
 	try {
 		compiler = Object.seal(new Compiler());
 
-		// TODO: deprecated?
-		compiler.analyzers = [
-			FunctionCallAnalyzer,
-			FunctionStartAnalyzer,
-			FunctionEndAnalyzer,
-			IdentifierAnalyzer,
-			EqualSignAnalyzer,
-			NumberAnalyzer,
-			PlusAnalyzer,
-			MinusAnalyzer,
-			SemicolonAnalyzer,
-		];
-
-		compiler.superAnalyzers = [
-			VariableDefinitionSuperAnalyzer,
-			FunctionCallSuperAnalyzer,
-			LabelSuperAnalyzer,
-			GotoSuperAnalyzer,
-			FunctionDefinitionSuperAnalyzer,
-			IfDefinitionSuperAnalyzer,
-		];
-
-		compiler.functions = {
-			RAMSelect: new RAMSelect(),
-			RAMRead: new RAMRead(),
-			RAMWrite: new RAMWrite(),
-			GPUSelect: new GPUSelect(),
-			GPUAdd: new GPUAdd(),
-			GPUSubtract: new GPUSubtract(),
-			keyboardRead: new keyboardRead(),
-			keyboardClear: new keyboardClear(),
-			shiftLeft: new shiftLeft(),
-			shiftRight: new shiftRight(),
-		};
-
 		compiler.compile(textareaLeft.value, false);
 
 		textareaRight.value = compiler.assemblyCode;

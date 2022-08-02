@@ -58,7 +58,7 @@ class CompilerFunction {
 	}
 }
 
-class Compiler {
+class BaseCompiler {
 	assemblyCode = '';
 
 	functionAssemblyCode = '';
