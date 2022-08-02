@@ -5,6 +5,36 @@ class SuperAnalyzer {
 
 	check() {}
 
+	getContentAndCode(allOpeningTags, allClosingTags) {
+		let bodyStart = allOpeningTags[0][0].length;
+
+		for (let currentClosingTag of allClosingTags) {
+			let openingTagNumber = 0;
+
+			let closingTagNumber = 0;
+
+			for (let openingTag of allOpeningTags) {
+				if (openingTag.index < currentClosingTag.index) {
+					openingTagNumber++;
+				}
+			}
+
+			for (let closingTag of allClosingTags) {
+				if (closingTag.index <= currentClosingTag.index) {
+					closingTagNumber++;
+				}
+			}
+
+			if (openingTagNumber === closingTagNumber) {
+				this.content = this.code.substring(bodyStart, currentClosingTag.index);
+
+				this.code = this.code.substr(currentClosingTag.index + currentClosingTag[0].length);
+
+				break;
+			}
+		}
+	}
+
 	constructor(code, compiler) {
 		this.code = code;
 
@@ -152,33 +182,7 @@ class FunctionDefinitionSuperAnalyzer extends SuperAnalyzer {
 
 		this.name = allFuncStart[0][1];
 
-		let bodyStart = allFuncStart[0][0].length;
-
-		for (let currentFuncEnd of allFuncEnd) {
-			let funcStartNumber = 0;
-
-			let funcEndNumber = 0;
-
-			for (let funcStart of allFuncStart) {
-				if (funcStart.index < currentFuncEnd.index) {
-					funcStartNumber++;
-				}
-			}
-
-			for (let funcEnd of allFuncEnd) {
-				if (funcEnd.index <= currentFuncEnd.index) {
-					funcEndNumber++;
-				}
-			}
-
-			if (funcStartNumber === funcEndNumber) {
-				this.content = this.code.substring(bodyStart, currentFuncEnd.index);
-
-				this.code = this.code.substr(currentFuncEnd.index + currentFuncEnd[0].length);
-
-				break;
-			}
-		}
+		this.getContentAndCode(allFuncStart, allFuncEnd);
 
 		if (this.compiler.functionExists(this.name) === true) {
 			throw `function "${this.name}" already exists`;
@@ -306,33 +310,7 @@ class IfDefinitionSuperAnalyzer extends SuperAnalyzer {
 
 		// console.log(this.firstOperand, this.operator, this.secondOperand);
 
-		let bodyStart = allIfStart[0][0].length;
-
-		for (let currentIfEnd of allIfEnd) {
-			let ifStartNumber = 0;
-
-			let ifEndNumber = 0;
-
-			for (let ifStart of allIfStart) {
-				if (ifStart.index < currentIfEnd.index) {
-					ifStartNumber++;
-				}
-			}
-
-			for (let ifEnd of allIfEnd) {
-				if (ifEnd.index <= currentIfEnd.index) {
-					ifEndNumber++;
-				}
-			}
-
-			if (ifStartNumber === ifEndNumber) {
-				this.content = this.code.substring(bodyStart, currentIfEnd.index);
-
-				this.code = this.code.substr(currentIfEnd.index + currentIfEnd[0].length);
-
-				break;
-			}
-		}
+		this.getContentAndCode(allIfStart, allIfEnd);
 
 		return true;
 	}
