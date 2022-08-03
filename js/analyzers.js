@@ -58,9 +58,6 @@ class Analyzer {
 		
 		this.cleanCode();
 
-		// TODO
-		// this.resultHandler();
-
 		return this.result;
 	}
 
@@ -120,26 +117,11 @@ class SemicolonAnalyzer extends Analyzer {
 const FunctionNamePattern = IdentifierPattern;
 
 class FunctionStartAnalyzer extends Analyzer {
-	// TODO: remove this if the code below works
-	regexp = /\s*\bfunc\b\s+(?!endfunc)(?!func)([_a-z][\w]*)/gi;
-
-	// regexp = new RegExp(String.raw`\s*\bfunc\b\s+(?!endfunc)(?!func)(${FunctionNamePattern})`, 'gi');
+	regexp = new RegExp(String.raw`\s*\bfunc\b\s+(?!endfunc)(?!func)(${FunctionNamePattern})`, 'gi');
 
 	validationName = 'function start';
 
 	global = true;
-
-	validate() {
-		// TODO: possibly needs removing
-
-		// console.log(this.result[0]);
-
-		// for (var funcStart of this.result) {
-			// if (this.result[1] === undefined) {
-			// 	throw 'empty or invalid function name';
-			// }
-		// }
-	}
 }
 
 class FunctionEndAnalyzer extends Analyzer {
@@ -151,9 +133,6 @@ class FunctionEndAnalyzer extends Analyzer {
 }
 
 class FunctionCallAnalyzer extends Analyzer {
-	// TODO: remove this code if the code below works
-	// regexp = /^\s*([_a-z][\w]*)*\(([^)]*)\)\s*|^(.+)\([^)]\)/i;
-
 	regexp = new RegExp(String.raw`^\s*(${FunctionNamePattern})*\(([^)]*)\)\s*|^(.+)\([^)]\)`, 'i');
 
 	validationName = 'function call';

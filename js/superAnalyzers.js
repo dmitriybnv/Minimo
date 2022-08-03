@@ -118,9 +118,6 @@ class VariableDefinitionSuperAnalyzer extends SuperAnalyzer {
 
 					analyzerObject.cleanCode();
 
-					// TODO: deprecated?
-					// analyzerObject.resultHandler();
-
 					analyzerObject.validate();
 
 					this.value.push(analyzerObject);

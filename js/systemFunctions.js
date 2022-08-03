@@ -53,10 +53,6 @@ class RAMRead extends CompilerFunction {
 					+ 'MAR R0' + '\n'
 					+ 'MW R1' + '\n\n';
 
-		// TODO:
-		// assemblyCode += `LD R0 ${compiler.decimalToHex(_arguments[0])}` + '\n'
-		// 			+ 'MR R0' + '\n\n';
-
 		return assemblyCode;
 	}
 }
