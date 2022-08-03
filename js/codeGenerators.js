@@ -79,11 +79,7 @@ class VariableDefinitionCodeGenerator extends CodeGenerator {
 			}
 
 			if (analyzer.constructor === IdentifierAnalyzer) {
-				let [variableExists, variableId] = compiler.checkVariable(analyzer.result[1]);
-
-				if (variableExists === false) {
-					throw 'variable ' + analyzer.result[1] + ' not found';
-				}
+				let variableId = compiler.checkVariable(analyzer.result[1]);
 
 				let address = this.superAnalyzer.compiler.decimalToHex(variableId);
 
@@ -106,10 +102,7 @@ class VariableDefinitionCodeGenerator extends CodeGenerator {
 			break;
 		}
 
-		/**
-		 * @type {number|null}
-		 */
-		let variableId = compiler.checkVariable(this.superAnalyzer.name)[1];
+		let variableId = compiler.checkVariable(this.superAnalyzer.name, true);
 
 		/**
 		 * @type {string}
@@ -200,11 +193,7 @@ class IfDefinitionCodeGenerator extends CodeGenerator {
 					accumulator = 'ACC';
 				}
 
-				let [variableExists, variableId] = compiler.checkVariable(operand.result[1]);
-
-				if (variableExists === false) {
-					throw 'variable ' + operand.result[1] + ' not found';
-				}
+				let variableId = compiler.checkVariable(operand.result[1]);
 
 				this.code += `LD R0 ${compiler.decimalToHex(variableId)}` + '\n'
 						+ 'MAR R0' + '\n'

@@ -31,11 +31,7 @@ class CompilerFunction {
 				throw `no argument found for "${this.name}" function`;
 			}
 
-			let [variableExists, variableId] = compiler.checkVariable(identifier.result[1]);
-
-			if (variableExists === false) {
-				throw `variable "${identifier.result[1]}" not defined`;
-			}
+			let variableId = compiler.checkVariable(identifier.result[1]);
 
 			_arguments.push(variableId);
 
@@ -117,18 +113,23 @@ class BaseCompiler {
 		return this.functions[name] !== undefined;
 	}
 
-	checkVariable(name) {
+	/**
+	 * @returns {null|number}
+	 */
+	checkVariable(name, ignoreException = false) {
 		for (let i = 0; i < this.variables.length; i++) {
 			let variable = this.variables[i];
 
 			if (variable.name === name) {
-				return [true, i];
+				return i;
 			}
 		}
 
-		// TODO: throw 'variable ' + operand.result[1] + ' not found';
+		if (ignoreException === true) {
+			return null;
+		}
 
-		return [false, null];
+		throw `variable ${name} not found`;
 	}
 
 	logBefore(superAnalyzer) {

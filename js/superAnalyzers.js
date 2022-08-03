@@ -238,14 +238,6 @@ class IfDefinitionSuperAnalyzer extends SuperAnalyzer {
 		if (operand.check(true) !== null) {
 			this.condition = operand.cleanCode(true);
 
-			// TODO
-
-			// var [variableExists, _] = this.compiler.checkVariable(operand.result[1]);
-
-			// if (variableExists === false) {
-			// 	throw 'variable ' + operand.result[1] + ' not found';
-			// }
-
 			return operand;
 		}
 
@@ -267,6 +259,7 @@ class IfDefinitionSuperAnalyzer extends SuperAnalyzer {
 
 		let allIfEnd = Object.seal(new IfEndAnalyzer(this.code, this)).check();
 
+		// TODO: code duplicate
 		let sum = 0;
 
 		if (allIfStart !== null) {
