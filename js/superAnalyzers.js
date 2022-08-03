@@ -5,7 +5,25 @@ class SuperAnalyzer {
 
 	check() {}
 
-	getContentAndCode(allOpeningTags, allClosingTags) {
+	getContentAndCode(allOpeningTags, allClosingTags, name) {
+		let sum = 0;
+
+		if (allOpeningTags !== null) {
+			sum += allOpeningTags.length;
+		}
+
+		if (allClosingTags !== null) {
+			sum += allClosingTags.length;
+		}
+
+		if (sum === 0) {
+			return false;
+		}
+
+		if (sum % 2 !== 0) {
+			throw `"${name}" start and end statement number mismatch`;
+		}
+
 		let bodyStart = allOpeningTags[0][0].length;
 
 		for (let currentClosingTag of allClosingTags) {
@@ -159,27 +177,11 @@ class FunctionDefinitionSuperAnalyzer extends SuperAnalyzer {
 
 		let allFuncEnd = Object.seal(new FunctionEndAnalyzer(this.code, this)).check();
 
-		let sum = 0;
-
-		if (allFuncStart !== null) {
-			sum += allFuncStart.length;
-		}
-
-		if (allFuncEnd !== null) {
-			sum += allFuncEnd.length;
-		}
-
-		if (sum === 0) {
+		if (this.getContentAndCode(allFuncStart, allFuncEnd, 'function') === false) {
 			return false;
 		}
 
-		if (sum % 2 !== 0) {
-			throw 'function start and end number mismatch';
-		}
-
 		this.name = allFuncStart[0][1];
-
-		this.getContentAndCode(allFuncStart, allFuncEnd);
 
 		if (this.compiler.functionExists(this.name) === true) {
 			throw `function "${this.name}" already exists`;
@@ -259,23 +261,8 @@ class IfDefinitionSuperAnalyzer extends SuperAnalyzer {
 
 		let allIfEnd = Object.seal(new IfEndAnalyzer(this.code, this)).check();
 
-		// TODO: code duplicate
-		let sum = 0;
-
-		if (allIfStart !== null) {
-			sum += allIfStart.length;
-		}
-
-		if (allIfEnd !== null) {
-			sum += allIfEnd.length;
-		}
-
-		if (sum === 0) {
+		if (this.getContentAndCode(allIfStart, allIfEnd, 'if') === false) {
 			return false;
-		}
-
-		if (sum % 2 !== 0) {
-			throw 'if statement start and end number mismatch';
 		}
 
 		this.condition = allIfStart[0][1];
@@ -299,8 +286,6 @@ class IfDefinitionSuperAnalyzer extends SuperAnalyzer {
 		}
 
 		// console.log(this.firstOperand, this.operator, this.secondOperand);
-
-		this.getContentAndCode(allIfStart, allIfEnd);
 
 		return true;
 	}
