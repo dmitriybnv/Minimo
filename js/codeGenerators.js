@@ -233,11 +233,11 @@ class IfDefinitionCodeGenerator extends CodeGenerator {
 		this.generateOperandCode(this.superAnalyzer.secondOperand, 1);
 
 		this.code +=  'CMP R0' + '\n\n'
-				+ `${jumpType} IF_${label}_SUCCESS$` + '\n'
-				+ `JMP IF_${label}_FAIL$` + '\n\n'
-				+ `#IF_${label}_SUCCESS#` + '\n\n'
+				+ `${jumpType} if_${label}_success$` + '\n'
+				+ `JMP if_${label}_fail$` + '\n\n'
+				+ `#if_${label}_success#` + '\n\n'
 				+ `${compiledContent}`
-				+ `#IF_${label}_FAIL#` + '\n\n';
+				+ `#if_${label}_fail#` + '\n\n';
 
 		return this.code;
 	}
