@@ -118,7 +118,7 @@ class VariableDefinitionSuperAnalyzer extends SuperAnalyzer {
 						throw `not expected: ${analyzerObject.validationName}`;
 					}
 
-					console.log(analyzerObject);
+					// console.log(analyzerObject);
 
 					if (lastToken !== false) {
 						if ([IdentifierAnalyzer, NumberAnalyzer].indexOf(analyzer) > -1) {
@@ -145,8 +145,6 @@ class VariableDefinitionSuperAnalyzer extends SuperAnalyzer {
 					continue loop;
 				}
 			}
-
-			alert('бац');
 
 			break;
 		} while (this.code.length > 0);

@@ -1,9 +1,12 @@
 class Compiler extends BaseCompiler {
-    // TODO: deprecated?
     analyzers = [
         FunctionCallAnalyzer,
         FunctionStartAnalyzer,
         FunctionEndAnalyzer,
+        IfStartAnalyzer,
+        IfEndAnalyzer,
+        LabelAnalyzer,
+        GotoAnalyzer,
         IdentifierAnalyzer,
         EqualSignAnalyzer,
         NumberAnalyzer,
