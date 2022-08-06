@@ -1,65 +1,76 @@
 key = 0;
 
 snakeColumn = 0;
+
 snakeData = 1;
 
-GPUSelect(snakeColumn)
-GPUAdd(snakeData)
+func drawSnakeOnce
+    GPUSelect(snakeColumn)
 
-func loop
-    keyboardRead(key)
+    GPUAdd(snakeData)
+endfunc
+
+func handleKeypress
+    tempColumn = snakeColumn;
+
+    tempData = snakeData;
+
+    changeFlag = 0;
 
     if (key == 1)
         if (snakeColumn > 0)
-            GPUSelect(snakeColumn)
-            GPUSubtract(snakeData)
+            changeFlag = 1;
 
-            snakeColumn = snakeColumn - 1;
-
-            GPUSelect(snakeColumn)
-            GPUAdd(snakeData)
+            tempColumn = tempColumn - 1;
         endif
     endif
 
     if (key == 3)
         if (snakeColumn < 19)
-            GPUSelect(snakeColumn)
-            GPUSubtract(snakeData)
+            changeFlag = 1;
 
-            snakeColumn = snakeColumn + 1;
-
-            GPUSelect(snakeColumn)
-            GPUAdd(snakeData)
+            tempColumn = tempColumn + 1;
         endif
     endif
 
     if (key == 4)
         if (snakeData < 128)
-            GPUSelect(snakeColumn)
-            GPUSubtract(snakeData)
+            changeFlag = 1;
 
-            shiftLeft(snakeData)
-
-            GPUSelect(snakeColumn)
-            GPUAdd(snakeData)
+            shiftLeft(tempData)
         endif
     endif
 
     if (key == 2)
         if (snakeData > 1)
-            GPUSelect(snakeColumn)
-            GPUSubtract(snakeData)
+            changeFlag = 1;
 
-            shiftRight(snakeData)
-
-            GPUSelect(snakeColumn)
-            GPUAdd(snakeData)
+            shiftRight(tempData)
         endif
     endif
 
-    keyboardClear()
+    if (changeFlag == 1)
+        GPUSelect(snakeColumn)
 
-    loop()
+        GPUSubtract(snakeData)
+
+        snakeColumn = tempColumn;
+
+        snakeData = tempData;
+
+        GPUSelect(snakeColumn)
+
+        GPUAdd(snakeData)
+    endif
 endfunc
 
-loop()
+drawSnakeOnce()
+
+#loop#
+    keyboardRead(key)
+
+    handleKeypress()
+
+    keyboardClear()
+
+    goto loop$
