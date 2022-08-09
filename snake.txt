@@ -1,6 +1,6 @@
 key = 0;
 
-snakeLength = 4;
+snakeLength = 3;
 
 baseAddress = 40;
 
@@ -46,7 +46,7 @@ x = 2;
 
 RAMWrite(x)
 
-y = 3;
+y = 1;
 
 tempAddress = baseAddress + 5;
 
@@ -165,8 +165,12 @@ func handleKeypress
 
                 snakeX = baseAddress + index2;
 
+                nextPreviousX = 0;
+                nextPreviousY = 0;
+
                 RAMSelect(snakeX)
                 RAMRead(temp)
+                RAMRead(nextPreviousX)
 
                 GPUSelect(temp)
 
@@ -174,8 +178,22 @@ func handleKeypress
 
                 RAMSelect(snakeY)
                 RAMRead(temp)
+                RAMRead(nextPreviousY)
 
                 GPUSubtract(temp)
+
+                GPUSelect(previousX)
+
+                RAMSelect(snakeX)
+                RAMWrite(previousX)
+
+                GPUAdd(previousY)
+
+                RAMSelect(snakeY)
+                RAMWrite(previousY)
+
+                previousX = nextPreviousX;
+                previousY = nextPreviousY;
 
                 index = index + 1;
 
