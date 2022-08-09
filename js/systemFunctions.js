@@ -189,3 +189,22 @@ class shiftRight extends CompilerFunction {
 		return assemblyCode;
 	}
 }
+
+class debug extends CompilerFunction {
+	name = 'debug';
+
+	systemFunction = true;
+
+	argumentNumber = 1;
+
+	handler(compiler, _arguments) {
+		let assemblyCode = '';
+
+		assemblyCode += `LD R0 ${compiler.decimalToHex(_arguments[0])}` + '\n'
+			+ 'MAR R0' + '\n'
+			+ 'MR R4' + '\n'
+			+ 'HALT' + '\n\n';
+
+		return assemblyCode;
+	}
+}

@@ -35,5 +35,6 @@ class Compiler extends BaseCompiler {
         keyboardClear: new keyboardClear(),
         shiftLeft: new shiftLeft(),
         shiftRight: new shiftRight(),
+        debug: new debug(),
     };
 }
