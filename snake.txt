@@ -1,66 +1,190 @@
 key = 0;
 
-snakeColumn = 0;
+snakeLength = 4;
 
-snakeData = 1;
+baseAddress = 40;
+
+
+
+RAMSelect(baseAddress)
+
+x = 4;
+
+RAMWrite(x)
+
+y = 1;
+
+tempAddress = baseAddress + 1;
+
+RAMSelect(tempAddress)
+RAMWrite(y)
+
+
+
+tempAddress = baseAddress + 2;
+
+RAMSelect(tempAddress)
+
+x = 3;
+
+RAMWrite(x)
+
+y = 1;
+
+tempAddress = baseAddress + 3;
+
+RAMSelect(tempAddress)
+RAMWrite(y)
+
+
+
+tempAddress = baseAddress + 4;
+
+RAMSelect(tempAddress)
+
+x = 2;
+
+RAMWrite(x)
+
+y = 3;
+
+tempAddress = baseAddress + 5;
+
+RAMSelect(tempAddress)
+RAMWrite(y)
+
+
 
 func drawSnakeOnce
-    GPUSelect(snakeColumn)
+    index = 0;
 
-    GPUAdd(snakeData)
+    index2 = 0;
+
+    #drawSnakeOnceLoop#
+        snakeX = baseAddress + index2;
+
+        temp = 0;
+
+        RAMSelect(snakeX)
+        RAMRead(temp)
+
+        GPUSelect(temp)
+
+        snakeY = baseAddress + index2 + 1;
+
+        RAMSelect(snakeY)
+        RAMRead(temp)
+
+        GPUAdd(temp)
+
+        index = index + 1;
+
+        index2 = index2 + 2;
+
+        if (index < snakeLength)
+           goto drawSnakeOnceLoop$
+        endif
 endfunc
 
 func handleKeypress
-    tempColumn = snakeColumn;
+    firstSnakeX = 0;
 
-    tempData = snakeData;
+    firstSnakeY = 0;
+
+    tempFirstSnakeX = 0;
+
+    tempFirstSnakeY = 0;
+
+    RAMSelect(baseAddress)
+    RAMRead(firstSnakeX)
+    RAMRead(tempFirstSnakeX)
+
+    tempAddress = baseAddress + 1;
+
+    RAMSelect(tempAddress)
+    RAMRead(firstSnakeY)
+    RAMRead(tempFirstSnakeY)
 
     changeFlag = 0;
 
     if (key == 1)
-        if (snakeColumn > 0)
+        if (firstSnakeX > 0)
             changeFlag = 1;
 
-            tempColumn = tempColumn - 1;
+            tempFirstSnakeX = tempFirstSnakeX - 1;
         endif
     endif
 
     if (key == 3)
-        if (snakeColumn < 19)
+        if (firstSnakeX < 19)
             changeFlag = 1;
 
-            tempColumn = tempColumn + 1;
+            tempFirstSnakeX = tempFirstSnakeX + 1;
         endif
     endif
 
     if (key == 4)
-        if (snakeData < 128)
+        if (firstSnakeY < 128)
             changeFlag = 1;
 
-            shiftLeft(tempData)
+            shiftLeft(tempFirstSnakeY)
         endif
     endif
 
     if (key == 2)
-        if (snakeData > 1)
+        if (firstSnakeY > 1)
             changeFlag = 1;
 
-            shiftRight(tempData)
+            shiftRight(tempFirstSnakeY)
         endif
     endif
 
     if (changeFlag == 1)
-        GPUSelect(snakeColumn)
+        GPUSelect(firstSnakeX)
+        GPUSubtract(firstSnakeY)
 
-        GPUSubtract(snakeData)
+        GPUSelect(tempFirstSnakeX)
+        GPUAdd(tempFirstSnakeY)
 
-        snakeColumn = tempColumn;
+        previousX = firstSnakeX;
+        previousY = firstSnakeY;
 
-        snakeData = tempData;
+        RAMSelect(baseAddress)
+        RAMWrite(tempFirstSnakeX)
 
-        GPUSelect(snakeColumn)
+        RAMSelect(tempAddress)
+        RAMWrite(tempFirstSnakeY)
 
-        GPUAdd(snakeData)
+        if (snakeLength > 1)
+            index = 1;
+
+            index2 = 2;
+
+            #handleKeypressLoop#
+                temp = 0;
+
+                snakeX = baseAddress + index2;
+
+                RAMSelect(snakeX)
+                RAMRead(temp)
+
+                GPUSelect(temp)
+
+                snakeY = baseAddress + index2 + 1;
+
+                RAMSelect(snakeY)
+                RAMRead(temp)
+
+                GPUSubtract(temp)
+
+                index = index + 1;
+
+                index2 = index2 + 2;
+
+                if (index < snakeLength)
+                   goto handleKeypressLoop$
+                endif
+        endif
     endif
 endfunc
 
