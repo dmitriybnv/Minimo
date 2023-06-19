@@ -4,7 +4,8 @@ snakeLength = 3;
 
 baseAddress = 40;
 
-
+foodX = 1;
+foodY = 8;
 
 RAMSelect(baseAddress)
 
@@ -139,6 +140,42 @@ func handleKeypress
         endif
     endif
 
+    if (key > 0)
+        if (tempFirstSnakeX == foodX)
+            if (firstSnakeY == foodY)
+                goto foodChange$
+            endif
+        endif
+
+        if (firstSnakeX == foodX)
+            if (tempFirstSnakeY == foodY)
+                goto foodChange$
+            endif
+        endif
+
+        goto foodSkip$
+
+        #foodChange#
+
+        if (foodX == 1)
+            nextFoodX = 18;
+        endif
+
+        if (foodX == 18)
+            nextFoodX = 1;
+        endif
+
+        GPUSelect(foodX)
+        GPUSubtract(foodY)
+
+        foodX = nextFoodX;
+
+        GPUSelect(foodX)
+        GPUAdd(foodY)
+
+        #foodSkip#
+    endif
+
     if (changeFlag == 1)
         GPUSelect(firstSnakeX)
         GPUSubtract(firstSnakeY)
@@ -205,6 +242,13 @@ func handleKeypress
         endif
     endif
 endfunc
+
+func drawFoodOnce
+    GPUSelect(foodX)
+    GPUAdd(foodY)
+endfunc
+
+drawFoodOnce()
 
 drawSnakeOnce()
 
