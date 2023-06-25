@@ -1,11 +1,17 @@
 key = 0;
 
 snakeLength = 3;
+maxSnakeLength = 8;
 
 baseAddress = 40;
 
 foodX = 1;
 foodY = 8;
+
+addPieceFlag = 0;
+
+tempData = 0;
+tempAddress = 0;
 
 RAMSelect(baseAddress)
 
@@ -173,6 +179,10 @@ func handleKeypress
         GPUSelect(foodX)
         GPUAdd(foodY)
 
+        if (snakeLength < maxSnakeLength)
+            addPieceFlag = 1;
+        endif
+
         #foodSkip#
     endif
 
@@ -238,6 +248,28 @@ func handleKeypress
 
                 if (index < snakeLength)
                    goto handleKeypressLoop$
+                endif
+
+                if (addPieceFlag == 1)
+                    tailX = snakeX + 2;
+                    RAMSelect(tailX)
+                    RAMWrite(previousX)
+
+                    tailY = snakeY + 2;
+                    RAMSelect(tailY)
+                    RAMWrite(previousY)
+
+                    RAMSelect(tailX)
+                    RAMRead(tempData)
+                    GPUSelect(tempData)
+
+                    RAMSelect(tailY)
+                    RAMRead(tempData)
+                    GPUAdd(tempData)
+
+                    snakeLength = snakeLength + 1;
+
+                    addPieceFlag = 0;
                 endif
         endif
     endif
